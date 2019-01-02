@@ -9,36 +9,39 @@
  */
 class Solution {
 public:
-    bool flag=true;
-    bool isSymmetric(TreeNode* root) {
-        if(root==NULL)
-            return true;
-        else if(root->left==NULL && root->right==NULL)
-            return true;
-        else if(root->left==NULL || root->right==NULL)
-            return false;
-        inorder(root->left, root->right);
-        return flag;
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        
+        int len=nums.size();
+         
+        int mid=(len)/2;
+        if(nums.empty()){
+            return 0;
+        }
+        TreeNode *head= new TreeNode(nums[mid]);
+        if(len<2)
+            return head;
+        maketree(nums, 0, mid-1,head);
+        maketree(nums, mid+1, len-1, head);
+        
+        return head;
     }
-    
-    void inorder(TreeNode *p, TreeNode *q){
-        if(p!=NULL && q==NULL){
-            flag=false;
+    void maketree(vector<int> arr, int begin, int end, TreeNode* node){
+        
+        if(end<begin)
             return;
-        }        
-        else if(p==NULL && q!=NULL){
-            flag==false;
-            return;
+        int mid=(begin+end)/2;
+        
+        if(arr[mid]>node->val){
+            node->right=new TreeNode(arr[mid]);
+            maketree(arr, mid+1, end, node->right);
+            maketree(arr, begin, mid-1, node->right);
         }
-        else if(p==NULL && q==NULL){
-            return;
+        else{
+            node->left=new TreeNode(arr[mid]);
+            maketree(arr, begin, mid-1, node->left);
+            maketree(arr, mid+1, end, node->left);
+
         }
-        else if(p->val!=q->val){
-            flag=false;
-            return;
-        }
-        inorder(p->left,q->right);
-            
-        inorder(p->right,q->left);
+        
     }
 };
